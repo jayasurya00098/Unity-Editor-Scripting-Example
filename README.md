@@ -1,8 +1,8 @@
 # Unity Editor Scripting Example
 
-When Creating an App or a Game in Unity, we ofter have a situtation where we have to create prefabs, create a scriptable object for it, then add a component to the prefab and add the scriptable object reference to it. This has to be done over and over again. 
+When Creating an App or a Game in Unity, we often have a situation where we have to create prefabs, create a scriptable object for it, then add a component to the prefab and add the scriptable object reference to it. This has to be done over and over again.  
 
-I created this Custom Window to make the process in a single window. This will be helpful when you need to create 100's of varients of similar type.
+I created this Custom Window to make the process in a single window. This will be helpful when you need to create 100's of variants of similar type.
 
 [My Portfolio Website](https://jokester00098.github.io).
 
