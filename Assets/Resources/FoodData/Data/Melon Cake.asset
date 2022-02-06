@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2124576506c132a49a5abd782087c681, type: 3}
-  m_Name: Ramen
+  m_Name: Melon Cake
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7556961146492200693, guid: d8cc77cff2d97bd43942545da1581071, type: 3}
-  name: Ramen
-  thumbnail: {fileID: 21300000, guid: 6559841b51eb31c47b9d16b494bf3542, type: 3}
-  foodType: 1
-  foodTaste: 1
-  eatingStyle: 3
-  calories: 530
-  protine: 32
-  fat: 40
+  prefab: {fileID: 7069056130365386306, guid: 3e3a2580874c717419e34dd7f919ec01, type: 3}
+  name: Melon Cake
+  thumbnail: {fileID: 21300000, guid: 4866f8fc2b13e1d4381f1196cb868cf9, type: 3}
+  foodType: 0
+  foodTaste: 0
+  eatingStyle: 1
+  calories: 400
+  protine: 10
+  fat: 25

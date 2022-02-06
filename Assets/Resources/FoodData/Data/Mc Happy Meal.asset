@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2124576506c132a49a5abd782087c681, type: 3}
-  m_Name: Ramen
+  m_Name: Mc Happy Meal
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7556961146492200693, guid: d8cc77cff2d97bd43942545da1581071, type: 3}
-  name: Ramen
-  thumbnail: {fileID: 21300000, guid: 6559841b51eb31c47b9d16b494bf3542, type: 3}
+  prefab: {fileID: 6348880497941373356, guid: a626feae16590c6428d7ccd8db72cd1f, type: 3}
+  name: Mc Happy Meal
+  thumbnail: {fileID: 21300000, guid: 5ab41617149902a438aef1e6c7d2210d, type: 3}
   foodType: 1
-  foodTaste: 1
-  eatingStyle: 3
-  calories: 530
-  protine: 32
-  fat: 40
+  foodTaste: 2
+  eatingStyle: 0
+  calories: 475
+  protine: 26
+  fat: 13

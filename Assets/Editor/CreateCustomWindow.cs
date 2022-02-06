@@ -1,40 +1,37 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using Types;
 
 public class CreateCustomWindow : EditorWindow
 {
     Texture2D headerSectionTexture;
-    Texture2D iceCreamSectionTexture;
-    Texture2D mcHappyMealSectionTexture;
-    Texture2D melonCakeSectionTexture;
-    Texture2D milkShakeSectionTexture;
-    Texture2D puddingSectionTexture;
-    Texture2D ramenSectionTexture;
-
-    Color headerSectionColor = new Color(217f / 255f, 215f / 255f, 241f / 255f, 1f);
-    Color theme1 = new Color(247f / 255f, 219f / 255f, 240f / 255f, 1);
-    Color theme2 = new Color(205f / 255f, 240f / 255f, 234f / 255f, 1);
-    Color theme3 = new Color(255f / 255f, 203f / 255f, 203f / 255f, 1);
-    Color theme4 = new Color(249f / 255f, 249f / 255f, 249f / 255f, 1);
-    Color theme5 = new Color(231f / 255f, 251f / 255f, 190f / 255f, 1);
-    Color theme6 = new Color(255f / 255f, 253f / 255f, 222f / 255f, 1);
+    Texture2D headerIconTexture;
+    Texture2D foodSectionTexture;
 
     Rect headerSection;
-    Rect iceCreamSection;
-    Rect mcHappyMealSection;
-    Rect melonCakeSection;
-    Rect milkShakeSection;
-    Rect puddingSection;
-    Rect ramenSection;
+    Rect headerIconSection;
+    Rect foodSection;
 
+    GUISkin guiSkin;
+
+    FoodData foodData;
+    public FoodData FoodInfo { get { return foodData; } }
+
+    //icon size, x and y offsets
+    float iconSize = 40;
+    float x_offset = 55;
+    float y_offset = 3;
 
     [MenuItem("Window/Custom Windows/Food Creator Window")]
     static void CreateWindow()
     {
         CreateCustomWindow customWindow = (CreateCustomWindow)GetWindow(typeof(CreateCustomWindow));
         customWindow.titleContent = new GUIContent("Food Creator Window", "You can create food items using this window.");
-        customWindow.minSize = new Vector2(600, 450); //set window minimum size
-        //customWindow.maxSize = new Vector2(600, 450); //set window maximum size
+
+        //To Disable Scaling of the Window I've added minSize & maxSize to be same.
+        customWindow.minSize = new Vector2(300, 290); //set window minimum size
+        customWindow.maxSize = new Vector2(300, 290); //set window maximum size
+
         customWindow.Show();
     }
 
@@ -44,6 +41,15 @@ public class CreateCustomWindow : EditorWindow
     private void OnEnable()
     {
         InitTexture();
+        InitData();
+
+        //get skin
+        guiSkin = Resources.Load<GUISkin>("GUIStyles/FoodCreatorStyle");
+    }
+
+    public void InitData()
+    {
+        foodData = (FoodData)ScriptableObject.CreateInstance(typeof(FoodData));
     }
 
     /// <summary>
@@ -51,43 +57,14 @@ public class CreateCustomWindow : EditorWindow
     /// </summary>
     private void InitTexture()
     {
-        headerSectionTexture = new Texture2D(1, 1);
-        headerSectionTexture.SetPixel(0, 0, headerSectionColor);
-        headerSectionTexture.Apply();
+        //Apply Textures from Resources Folder
+        headerSectionTexture = Resources.Load<Texture2D>("Icons/Solid");
 
-        iceCreamSectionTexture = new Texture2D(1, 1);
-        iceCreamSectionTexture.SetPixel(0, 0, theme1);
-        iceCreamSectionTexture.Apply();
+        //Apply Textures from Resources Folder
+        headerIconTexture = Resources.Load<Texture2D>("Icons/Food_Icon");
 
-        mcHappyMealSectionTexture = new Texture2D(1, 1);
-        mcHappyMealSectionTexture.SetPixel(0, 0, theme2);
-        mcHappyMealSectionTexture.Apply();
-
-        melonCakeSectionTexture = new Texture2D(1, 1);
-        melonCakeSectionTexture.SetPixel(0, 0, theme3);
-        melonCakeSectionTexture.Apply();
-
-        milkShakeSectionTexture = new Texture2D(1, 1);
-        milkShakeSectionTexture.SetPixel(0, 0, theme4);
-        milkShakeSectionTexture.Apply();
-
-        puddingSectionTexture = new Texture2D(1, 1);
-        puddingSectionTexture.SetPixel(0, 0, theme5);
-        puddingSectionTexture.Apply();
-
-        ramenSectionTexture = new Texture2D(1, 1);
-        ramenSectionTexture.SetPixel(0, 0, theme6);
-        ramenSectionTexture.Apply();
-
-        /*
-        //Apply Textures
-        iceCreamSectionTexture = Resources.Load<Texture2D>("Icons/IceCream");
-        mcHappyMealSectionTexture = Resources.Load<Texture2D>("Icons/McHappyMeal");
-        melonCakeSectionTexture = Resources.Load<Texture2D>("Icons/MelonCake");
-        milkShakeSectionTexture = Resources.Load<Texture2D>("Icons/MilkShake");
-        puddingSectionTexture = Resources.Load<Texture2D>("Icons/Pudding");
-        ramenSectionTexture = Resources.Load<Texture2D>("Icons/ramen");
-        */
+        //Apply Textures from Resources Folder
+        foodSectionTexture = Resources.Load<Texture2D>("Icons/Gradient");
     }
 
     /// <summary>
@@ -98,12 +75,7 @@ public class CreateCustomWindow : EditorWindow
     {
         DrawLayouts();
         DrawHeader();
-        DrawIceCreamSettings();
-        DrawMcHappyMealSettings();
-        DrawMelonCakeSettings();
-        DrawMilkShakeSetttings();
-        DrawPuddingSettings();
-        DrawRamenSettings();
+        DrawFoodSettings();
     }
 
     /// <summary>
@@ -111,41 +83,22 @@ public class CreateCustomWindow : EditorWindow
     /// </summary>
     private void DrawLayouts()
     {
+        //set header section position, width and height
         headerSection.x = 0; headerSection.y = 0;
         headerSection.width = Screen.width;
         headerSection.height = 50;
-
-        iceCreamSection.x = 0; iceCreamSection.y = 50;
-        iceCreamSection.width = Screen.width/ 3;
-        iceCreamSection.height = (Screen.height - 50) / 2;
-
-        mcHappyMealSection.x = Screen.width / 3; mcHappyMealSection.y = 50;
-        mcHappyMealSection.width = Screen.width / 3;
-        mcHappyMealSection.height = (Screen.height - 50) / 2;
-
-        melonCakeSection.x = Screen.width / 3 * 2; melonCakeSection.y = 50;
-        melonCakeSection.width = Screen.width / 3;
-        melonCakeSection.height = (Screen.height - 50) / 2;
-
-        milkShakeSection.x = 0; milkShakeSection.y = (Screen.height + 50) / 2;
-        milkShakeSection.width = Screen.width / 3;
-        milkShakeSection.height = (Screen.height - 50) / 2;
-
-        puddingSection.x = Screen.width / 3; puddingSection.y = (Screen.height + 50) / 2;
-        puddingSection.width = Screen.width / 3;
-        puddingSection.height = (Screen.height - 50) / 2;
-
-        ramenSection.x = Screen.width / 3 * 2; ramenSection.y = (Screen.height + 50) / 2;
-        ramenSection.width = Screen.width / 3;
-        ramenSection.height = (Screen.height - 50) / 2;
-
+        //set header icon section position, width and height
+        headerIconSection.x = headerSection.width / 2 + x_offset;
+        headerIconSection.y = y_offset;
+        headerIconSection.width = headerIconSection.height = iconSize;
+        //set food section position, width and height
+        foodSection.x = 0; foodSection.y = 50;
+        foodSection.width = Screen.width;
+        foodSection.height = (Screen.height - 50);
+        //draw both header section and food section
         GUI.DrawTexture(headerSection, headerSectionTexture);
-        GUI.DrawTexture(iceCreamSection, iceCreamSectionTexture);
-        GUI.DrawTexture(mcHappyMealSection, mcHappyMealSectionTexture);
-        GUI.DrawTexture(melonCakeSection, melonCakeSectionTexture);
-        GUI.DrawTexture(milkShakeSection, milkShakeSectionTexture);
-        GUI.DrawTexture(puddingSection, puddingSectionTexture);
-        GUI.DrawTexture(ramenSection, ramenSectionTexture);
+        GUI.DrawTexture(headerIconSection, headerIconTexture);
+        GUI.DrawTexture(foodSection, foodSectionTexture);
     }
 
     /// <summary>
@@ -154,56 +107,168 @@ public class CreateCustomWindow : EditorWindow
     private void DrawHeader()
     {
         GUILayout.BeginArea(headerSection);
-
-
+        GUILayout.Label("Food Creator", guiSkin.GetStyle("Header"));
         GUILayout.EndArea();
     }
 
     /// <summary>
     /// Draw content of IceCream
     /// </summary>
-    private void DrawIceCreamSettings()
+    private void DrawFoodSettings()
     {
+        GUILayout.BeginArea(foodSection);
 
+        //prefab field
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("PREFAB:*", guiSkin.GetStyle("FoodHeader"));
+        foodData.prefab = (GameObject)EditorGUILayout.ObjectField(foodData.prefab, typeof(GameObject), false);
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(3f);
+
+        //name field
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("NAME:*", guiSkin.GetStyle("FoodHeader"));
+        foodData.name = (string)EditorGUILayout.TextField(foodData.name);
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(3f);
+
+        //thumbnail field
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("THUMBNAIL:", guiSkin.GetStyle("FoodHeader"));
+        foodData.thumbnail = (Sprite)EditorGUILayout.ObjectField(foodData.thumbnail, typeof(Sprite), false);
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(3f);
+
+        //food type
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("FOOD TYPE:", guiSkin.GetStyle("FoodHeader"));
+        foodData.foodType = (FoodType)EditorGUILayout.EnumPopup(foodData.foodType);
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(3f);
+
+        //food taste
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("FOOD TASTE:", guiSkin.GetStyle("FoodHeader"));
+        foodData.foodTaste = (FoodTaste)EditorGUILayout.EnumPopup(foodData.foodTaste);
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(3f);
+
+        //eating style
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("EATING STYLE:", guiSkin.GetStyle("FoodHeader"));
+        foodData.eatingStyle = (EatingStyle)EditorGUILayout.EnumPopup(foodData.eatingStyle);
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(3f);
+
+        //calories field
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("CALORIES:", guiSkin.GetStyle("FoodHeader"));
+        foodData.calories = (int)EditorGUILayout.IntField(foodData.calories);
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(3f);
+
+        //protein field
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("PROTEIN:", guiSkin.GetStyle("FoodHeader"));
+        foodData.protein = (float)EditorGUILayout.Slider(foodData.protein, 0, 100);
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(3f);
+
+        //fat field
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("FAT:", guiSkin.GetStyle("FoodHeader"));
+        foodData.fat = (float)EditorGUILayout.Slider(foodData.fat, 0, 100);
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(10f);
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(10f);
+        //help box for Empty Prefab
+        if (foodData.prefab == null)
+        {
+            EditorGUILayout.HelpBox("Please Add a [Prefab]", MessageType.Warning);
+        }
+        //help box for Empty Name
+        else if (foodData.name == null || foodData.name.Length < 1)
+        {
+            EditorGUILayout.HelpBox("Please Add a [Name]", MessageType.Warning);
+        }
+        //when both name and prefab available creates button
+        else if (GUILayout.Button("Create", GUILayout.Height(30)))
+        {
+            SaveAndExport();
+        }
+        GUILayout.Space(10f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.EndArea();
     }
 
     /// <summary>
-    /// Draw content of McHappyMeal
+    /// Creates a copy of prefab, creates and adds a .asset file to the prefab
     /// </summary>
-    private void DrawMcHappyMealSettings()
+    void SaveAndExport()
     {
+        string prefabPath;
+        string newPrefabPath = "Assets/Prefabs/Food/";
+        string dataPath = "Assets/Resources/FoodData/Data/";
 
+        dataPath += FoodInfo.name + ".asset";
+
+        AssetDatabase.CreateAsset(FoodInfo, dataPath);
+
+        newPrefabPath += FoodInfo.name + ".prefab";
+
+        prefabPath = AssetDatabase.GetAssetPath(FoodInfo.prefab);
+
+        AssetDatabase.CopyAsset(prefabPath, newPrefabPath);
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        GameObject foodPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(newPrefabPath, typeof(GameObject));
+        if (!foodPrefab.GetComponent<Food>())
+        {
+            foodPrefab.AddComponent(typeof(Food));
+        }
+
+        foodPrefab.GetComponent<Food>().data = FoodInfo;
+
+        Debug.Log("Created " + " .asset at " + dataPath + " || " + "Created " + " .prefab at " + newPrefabPath);
+
+        ResetValues();
     }
 
-    /// <summary>
-    /// Draw content of MelonCake
-    /// </summary>
-    private void DrawMelonCakeSettings()
+    void ResetValues()
     {
-
-    }
-
-    /// <summary>
-    /// Draw content of MilkShake
-    /// </summary>
-    private void DrawMilkShakeSetttings()
-    {
-
-    }
-
-    /// <summary>
-    /// Draw content of Pudding
-    /// </summary>
-    private void DrawPuddingSettings()
-    {
-
-    }
-
-    /// <summary>
-    /// Draw content of Ramen
-    /// </summary>
-    private void DrawRamenSettings()
-    {
-
+        //createing another instance of scriptable object to avoid Create Asset issue
+        foodData = (FoodData)ScriptableObject.CreateInstance(typeof(FoodData));
+        //Resetting Food Info Values
+        FoodInfo.prefab = null;
+        FoodInfo.name = "";
+        FoodInfo.thumbnail = null;
+        FoodInfo.foodType = FoodType.VEG;
+        FoodInfo.foodTaste = FoodTaste.SWEET;
+        FoodInfo.calories = 0;
+        FoodInfo.protein = 0f;
+        FoodInfo.fat = 0f;
     }
 }
