@@ -14,8 +14,8 @@ public class CreateCustomWindow : EditorWindow
 
     GUISkin guiSkin;
 
-    FoodData foodData;
-    public FoodData FoodInfo { get { return foodData; } }
+    static FoodData foodData;
+    public static FoodData FoodInfo { get { return foodData; } }
 
     //icon size, x and y offsets
     float iconSize = 40;
@@ -47,7 +47,7 @@ public class CreateCustomWindow : EditorWindow
         guiSkin = Resources.Load<GUISkin>("GUIStyles/FoodCreatorStyle");
     }
 
-    public void InitData()
+    public static void InitData()
     {
         foodData = (FoodData)ScriptableObject.CreateInstance(typeof(FoodData));
     }
